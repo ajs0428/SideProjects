@@ -1,18 +1,25 @@
-library(ggplot2)
+library(ggplot2) 
 library(terra)
-library(rgdal)
+library(rgdal) #don't need I think?
 library(rayshader)
 #library(magick)
 #library(rgl)
 #library(viridis)
 
+#set the working directory that contains the files
 setwd("/Users/Anthony/OneDrive - UW/University of Washington/Data and Modeling/")
 #setwd("/Users/ajs0428/OneDrive - UW/University of Washington/Data and Modeling/") #Windows
 
+#I have my digital elevation model of hogsback here as output.tif in a 
+    #subfolder called Hogsback within another folder called Side
 hogs <- rast("Side/Hogsback/output.tif")
-plot(hogs)
-hogs_mat <- raster_to_matrix(hogs)
+plot(hogs) #plotting for fun
 
+# This part is tricky because the rayshader package doesn't like NA values
+#   So the DEM or thing you model must take up the entire area without NAs 
+hogs_mat <- raster_to_matrix(hogs) # convert to matrix
+
+# This is taken from the rayshader website and I would need to go back to know each thing
 hogs_mat %>%
     sphere_shade(texture = 'bw', colorintensity = 3) %>%
     add_shadow(ray_shade(hogs_mat, zscale = 5), 0.5) %>%
@@ -25,4 +32,5 @@ hogs_mat %>%
 #add_shadow(ray_shade(carbon_mat, zscale = 3), 0.5) %>%
 #add_shadow(ambient_shade(carbon_mat), 0) %>%
 
+# Once it loads use this to take a picture 
 render_snapshot()
